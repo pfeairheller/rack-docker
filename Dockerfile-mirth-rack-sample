@@ -1,0 +1,112 @@
+# Start with Python 3.12.8 Debian Bookworm base image
+FROM python:3.12.8-bookworm
+
+# Set environment variables
+ENV MIRTH_CONNECT_VERSION="4.5.2.b363"
+ENV DEBIAN_FRONTEND=noninteractive
+ENV VIRTUAL_ENV=/opt/venv
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
+# Install OpenJDK 17 and required dependencies
+RUN apt-get update && apt-get install -y \
+    openjdk-17-jdk \
+    wget \
+    unzip \
+    libsodium-dev \
+    supervisor \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set JAVA_HOME
+ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+
+# Create and activate virtual environment
+RUN python -m venv $VIRTUAL_ENV
+
+# Create Mirth directory
+RUN mkdir -p /opt/mirthconnect
+
+# Copy wheel file into container
+COPY ./dist/rack-0.0.9-py3-none-any.whl /tmp/
+
+# Install wheel in virtual environment
+RUN . $VIRTUAL_ENV/bin/activate && \
+    pip install /tmp/rack-0.0.9-py3-none-any.whl && \
+    rm /tmp/rack-0.0.9-py3-none-any.whl
+
+
+# Download and install Mirth Connect
+RUN wget -q https://s3.amazonaws.com/downloads.mirthcorp.com/connect/$MIRTH_CONNECT_VERSION/mirthconnect-$MIRTH_CONNECT_VERSION-unix.tar.gz -O /tmp/mirthconnect.tar.gz \
+#COPY ./images/mirthconnect-$MIRTH_CONNECT_VERSION-unix.tar.gz /tmp/mirthconnect.tar.gz
+RUN tar -xzf /tmp/mirthconnect.tar.gz -C /opt/mirthconnect --strip-components=1 \
+    && rm /tmp/mirthconnect.tar.gz
+
+# Set permissions
+RUN chmod +x /opt/mirthconnect/mcservice \
+    && chmod +x /opt/mirthconnect/mccommand
+
+# Create Mirth user and set ownership
+RUN useradd -r -s /bin/false mirth \
+    && chown -R mirth:mirth /opt/mirthconnect
+
+# Set virtual environment permissions
+RUN chown -R mirth:mirth $VIRTUAL_ENV
+
+# Create directory for supervisor logs
+RUN mkdir -p /var/log/supervisor && \
+    chown -R mirth:mirth /var/log/supervisor
+
+# Create directories for RACK
+RUN mkdir -p /opt/rack && \
+    mkdir -p /usr/local/var/keri
+
+# Install RACK
+RUN . $VIRTUAL_ENV/bin/activate && \
+    rack install --name Mirth --insecure --admin-port 8632 --admin-host "0.0.0.0"
+
+COPY <<EOF /opt/rack/rack.sh
+source /opt/venv/bin/activate
+rack start --name Mirth
+EOF
+
+RUN chown -R mirth:mirth /opt/rack && \
+    chown -R mirth:mirth /usr/local/var/keri && \
+    chmod +x /opt/rack/rack.sh
+
+# Configure supervisor
+COPY <<EOF /etc/supervisor/conf.d/mirth-rack.conf
+[supervisord]
+nodaemon=true
+user=root
+logfile=/var/log/supervisor/supervisord.log
+pidfile=/var/run/supervisord.pid
+
+[program:mirth]
+command=/opt/mirthconnect/mcserver
+user=mirth
+directory=/opt/mirthconnect
+autostart=true
+autorestart=true
+stdout_logfile=/var/log/supervisor/mirth.log
+stderr_logfile=/var/log/supervisor/mirth.err
+stopasgroup=true
+
+[program:rack]
+command=/bin/bash /opt/rack/rack.sh
+user=mirth
+directory=/opt/rack
+autostart=true
+autorestart=true
+stdout_logfile=/var/log/supervisor/rack.log
+stderr_logfile=/var/log/supervisor/rack.err
+stopasgroup=true
+EOF
+
+
+# Expose Mirth Connect ports
+EXPOSE 8080 8443 8632
+
+# Switch back to root for final commands
+USER root
+
+# Command to start supervisor
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]

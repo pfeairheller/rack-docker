@@ -1,0 +1,25 @@
+version: "3.9"
+
+services:
+  mirth-connect:
+    image: nextgenhealthcare/connect:4.5.0
+    ports:
+      - "8080:8080" # Maps host port 8080 to container port 8080
+    volumes:
+      - mirth-connect-data:/opt/mirth/data # Persists Mirth Connect data
+    depends_on: # Ensures Rack apps are running first
+      - rack
+    networks: # Connect to the same network
+      - rack-network
+
+  rack:
+    image: healthkeri/rack:1.0.0
+    ports:
+      - "8632:8632" # Maps host port 8632 to container port 8632
+    networks: # Connect to the same network
+      - rack-network
+volumes:
+  mirth-connect-data: # Named volume for Mirth Connect
+
+networks:
+  rack-network: # Custom network for communication

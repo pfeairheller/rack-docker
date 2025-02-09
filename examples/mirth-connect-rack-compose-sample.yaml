@@ -1,0 +1,57 @@
+version: "3.9"
+
+services:
+  mirth-connect-1:
+    image: nextgenhealthcare/connect:4.5.0
+    ports:
+      - "8080:8080" # Maps host port 8080 to container port 8080
+    volumes:
+      - mirth-connect-data1:/opt/mirth/data # Persists Mirth Connect data
+    depends_on: # Ensures Rack apps are running first
+      - rack-1
+      - rack-2
+    networks: # Connect to the same network
+      - rack-sample-network
+
+  mirth-connect-2:
+    image: nextgenhealthcare/connect:4.5.0
+    ports:
+      - "8081:8080" # Maps host port 8081 to container port 8080
+    volumes:
+      - mirth-connect-data2:/opt/mirth/data # Persists Mirth Connect data
+    depends_on: # Ensures Rack apps are running first
+      - rack-1
+      - rack-2
+    networks: # Connect to the same network
+      - rack-sample-network
+
+  rack-1:
+    image: healthkeri/rack:1.0.0
+    ports:
+      - "15632:15632" # Maps host port 15632 to container port 15632
+    environment:
+      RACK_NAME: "Rack1"
+      PORT: 15632
+      SALT: DYA2LrpDmnk1xgI4ADxbc  # For testing purposes, never put a salt in a file like this
+      PASS_ID: /opt/rack/passid.cesr
+    networks: # Connect to the same network
+      - rack-sample-network
+
+  rack-2:
+    image: healthkeri/rack:1.0.0
+    ports:
+      - "17632:17632" # Maps host port 17632 to container port 17632
+    environment:
+      RACK_NAME: "Rack2"
+      PORT: 17632
+      SALT: Bd8VBggWxGP-OjI7R4vxM  # For testing purposes, never put a salt in a file like this
+      PASS_ID: /opt/rack/passid.cesr
+    networks: # Connect to the same network
+      - rack-sample-network
+
+volumes:
+  mirth-connect-data1: # Named volume for Mirth Connect 1
+  mirth-connect-data2: # Named volume for Mirth Connect 2
+
+networks:
+  rack-sample-network: # Custom network for communication

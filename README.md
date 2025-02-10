@@ -282,6 +282,6 @@ services:
 <a name="license"></a>
 # License [↑](#top)
 
-The Dockerfiles, entrypoint script, and any other files used to build these Docker images are Copyright © healthKERI and licensed under the [Mozilla Public License 2.0](https://www.mozilla.org/en-US/MPL/2.0/).
+The Dockerfiles, entrypoint script, and any other files used to build these Docker images are Copyright © healthKERI and licensed under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt).
 
-You can find a copy of the RACK license in [server/docs/LICENSE.txt](https://github.com/healthkeri/rack/blob/development/server/docs/LICENSE.txt). All licensing information regarding third-party libraries is located in the [server/docs/thirdparty](https://github.com/healthkeri/rack/tree/development/server/docs/thirdparty) folder.
+You can find a copy of the RACK license in [LICENSE.txt](https://github.com/healthkeri/rack/blob/development/LICENSE).

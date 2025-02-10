@@ -1,0 +1,13 @@
+version: "3.9"
+
+services:
+  rack:
+    image: healthkeri/rack
+    ports:
+      - "15632:15632/tcp" # Maps host port 15632 to container port 15632
+      - "4444:4444/tcp"
+    environment:
+      RACK_NAME: "Rack1"
+      PORT: 15632
+      SALT: DYA2LrpDmnk1xgI4ADxbc  # For testing purposes, never put a salt in a file like this
+      PASS_ID: /opt/rack/passid.cesr

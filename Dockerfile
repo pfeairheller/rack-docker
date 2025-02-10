@@ -7,7 +7,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV VIRTUAL_ENV=/opt/venv
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
-# Install OpenJDK 17 and required dependencies
+# Install required dependencies
 RUN apt-get update && apt-get install -y \
     wget \
     unzip \

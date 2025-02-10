@@ -67,7 +67,7 @@ An open-source security gateway focused on healthcare. For more information plea
 Sign Everything
 The healthKERI RACK gateway is a radical new approach to Zero-Trust network access.  It leverages the Key Event Receipt Infrastructure (KERI) protocol to help healthcare organizations of all size move toward more robust security using techniques recommended by the Cybersecurity & Infrastructure Security Agency in [Modern Approaches to Network Access Security](https://www.cisa.gov/resources-tools/resources/modern-approaches-network-access-security).
 
-The easiest way to discover the power of the healthKERI approaches of Sign Everything and Keys at the Edge is to give RACK a try using the Docker images defined in this repository.  We have written a [Getting Started](https://github.com/healthKERI/rack-docker/blob/master/docs/getting_started.md) tutorial and accompanying Docker Compose files that can help you quickly start using two RACK Gateways to establish a secure connection between two [Mirth Connect](https://github.com/nextgenhealthcare/connect) integration engines exchanging FHIR data. 
+The easiest way to discover the power of the healthKERI approaches of Sign Everything and Keys at the Edge is to give RACK a try using the Docker images defined in this repository.  We have written a [Getting Started](https://github.com/healthKERI/rack-docker/blob/master/docs/GETTING_STARTED.md) tutorial and accompanying Docker Compose files that can help you quickly start using two RACK Gateways to establish a secure connection between two [Mirth Connect](https://github.com/nextgenhealthcare/connect) integration engines exchanging FHIR data. 
 
 ------------
 

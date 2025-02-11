@@ -19,7 +19,7 @@ RUN apt-get update && apt-get install -y \
 RUN python -m venv $VIRTUAL_ENV
 
 # Copy wheel file into container
-COPY ./dist/rack-0.0.9-py3-none-any.whl /tmp/
+COPY ./dist/rack-1.0.0-py3-none-any.whl /tmp/
 
 # Install wheel in virtual environment
 RUN . $VIRTUAL_ENV/bin/activate && \

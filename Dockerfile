@@ -5,6 +5,7 @@ FROM python:3.12.8-bookworm
 ENV DEBIAN_FRONTEND=noninteractive
 ENV VIRTUAL_ENV=/opt/venv
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+ENV RACK_VERSION=1.0.0
 
 # Install required dependencies
 RUN apt-get update && apt-get install -y \
@@ -18,12 +19,12 @@ RUN apt-get update && apt-get install -y \
 RUN python -m venv $VIRTUAL_ENV
 
 # Copy wheel file into container
-COPY rack/rack-1.0.0-py3-none-any.whl /tmp/
+COPY rack/rack-$RACK_VERSION-py3-none-any.whl /tmp/
 
 # Install wheel in virtual environment
 RUN . $VIRTUAL_ENV/bin/activate && \
-    pip install /tmp/rack-0.0.9-py3-none-any.whl && \
-    rm /tmp/rack-0.0.9-py3-none-any.whl
+    pip install /tmp/rack-$RACK_VERSION-py3-none-any.whl && \
+    rm /tmp/rack-$RACK_VERSION-py3-none-any.whl
 
 # Create Mirth user and set ownership
 RUN useradd -u 1001 -r -s /bin/false rack
@@ -58,7 +59,7 @@ RUN chown -R rack:rack /opt/rack && \
     chmod +x /opt/rack/rack.sh
 
 WORKDIR /opt/rack/data
-COPY ./images/entrypoint.sh /
+COPY ./entrypoint.sh /
 RUN chmod 755 /entrypoint.sh
 
 USER rack

@@ -28,6 +28,8 @@ for channel_file in /opt/connect/channels/*.xml; do
   echo "Importing channel: $channel_file"
 cat << EOF > /opt/connect/channels/script.txt
 import "${channel_file}"
+deploy
+channel enable *
 channel start *
 EOF
   /opt/connect/cli/mccommand -u admin -p admin -a "https://${MIRTH_HOST}:${MIRTH_PORT}" -s "/opt/connect/channels/script.txt"

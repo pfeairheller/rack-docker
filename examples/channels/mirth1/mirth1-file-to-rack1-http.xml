@@ -51,7 +51,7 @@
         <queueBufferSize>1000</queueBufferSize>
       </sourceConnectorProperties>
       <scheme>FILE</scheme>
-      <host>/opt/connect/appdata</host>
+      <host>/opt/connect/data</host>
       <fileFilter>*</fileFilter>
       <regex>false</regex>
       <directoryRecursion>false</directoryRecursion>
@@ -130,7 +130,7 @@
           <queueBufferSize>1000</queueBufferSize>
           <reattachAttachments>true</reattachAttachments>
         </destinationConnectorProperties>
-        <host>http://172.31.0.3:3333/fhir</host>
+        <host>http://172.31.0.4:3333/fhir/</host>
         <useProxyServer>false</useProxyServer>
         <proxyAddress></proxyAddress>
         <proxyPort></proxyPort>

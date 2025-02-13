@@ -158,3 +158,6 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 .idea/
 *.iml
+/examples/channels/mirth1/script.txt
+/examples/channels/mirth2/script.txt
+/examples/data/volumes/mirth2/*.json

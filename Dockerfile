@@ -2,7 +2,6 @@
 FROM python:3.12.8-bookworm
 
 # Set environment variables
-ENV MIRTH_CONNECT_VERSION="4.5.2.b363"
 ENV DEBIAN_FRONTEND=noninteractive
 ENV VIRTUAL_ENV=/opt/venv
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
@@ -19,7 +18,7 @@ RUN apt-get update && apt-get install -y \
 RUN python -m venv $VIRTUAL_ENV
 
 # Copy wheel file into container
-COPY ./dist/rack-1.0.0-py3-none-any.whl /tmp/
+COPY rack/rack-1.0.0-py3-none-any.whl /tmp/
 
 # Install wheel in virtual environment
 RUN . $VIRTUAL_ENV/bin/activate && \
@@ -52,14 +51,11 @@ fi
 rack start --name \"\$\{RACK_NAME\}\" \$\{ARGS\}
 EOF
 
-COPY ./images/passid.cesr /opt/rack
+COPY ./passid.cesr /opt/rack
 
 RUN chown -R rack:rack /opt/rack && \
     chown -R rack:rack /usr/local/var/keri && \
     chmod +x /opt/rack/rack.sh
-
-# Expose Mirth Connect ports
-EXPOSE 8632 8080
 
 WORKDIR /opt/rack/data
 COPY ./images/entrypoint.sh /

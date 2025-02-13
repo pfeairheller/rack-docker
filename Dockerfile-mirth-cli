@@ -1,0 +1,19 @@
+FROM nextgenhealthcare/connect:4.5.0
+
+# Create the data directory and set ownership to the mirth user
+USER root
+RUN mkdir -p /opt/connect/data && \
+    mkdir -p /opt/connect/channels && \
+    chown mirth:mirth /opt/connect/data && \
+    chown mirth:mirth /opt/connect/channels
+
+# Install the Mirth Connect CLI
+RUN curl -SL https://s3.amazonaws.com/downloads.mirthcorp.com/connect/4.5.0.b3012/mirthconnectcli-4.5.0.b3012-unix.tar.gz \
+    | tar -xzC /opt/connect \
+    && mv "/opt/connect/Mirth Connect CLI" /opt/connect/cli
+
+COPY mirth-cli-import.sh /opt/connect
+RUN chown mirth:mirth /opt/connect/mirth-cli-import.sh && \
+    chmod 755 /opt/connect/mirth-cli-import.sh
+
+ENTRYPOINT ["/opt/connect/mirth-cli-import.sh"]

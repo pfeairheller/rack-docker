@@ -5,25 +5,53 @@ services:
     image: nextgenhealthcare/connect:4.5.0
     ports:
       - "8080:8080" # Maps host port 8080 to container port 8080
+      - "8443:8443"
     volumes:
-      - mirth-connect-data1:/opt/mirth/data # Persists Mirth Connect data
+      - ./data/volumes/mirth1:/opt/connect/data # Persists Mirth Connect data
     depends_on: # Ensures Rack apps are running first
       - rack-1
       - rack-2
     networks: # Connect to the same network
-      - rack-sample-network
+      rack-sample-network:
+        ipv4_address: 172.31.0.2
+
+  mirth-cli-1:
+    image: healthkeri/mirth-with-cli:1.0.0
+    volumes:
+      - ./channels/mirth1:/opt/connect/channels
+    depends_on:
+      - mirth-connect-1
+    environment:
+      MIRTH_HOST: 172.31.0.2
+      MIRTH_PORT: 8443
+    networks: # Connect to the same network
+      rack-sample-network:
 
   mirth-connect-2:
     image: nextgenhealthcare/connect:4.5.0
     ports:
       - "8081:8080" # Maps host port 8081 to container port 8080
+      - "8444:8443"
     volumes:
-      - mirth-connect-data2:/opt/mirth/data # Persists Mirth Connect data
+      - ./data/volumes/mirth2:/opt/connect/data # Persists Mirth Connect data
     depends_on: # Ensures Rack apps are running first
       - rack-1
       - rack-2
     networks: # Connect to the same network
-      - rack-sample-network
+      rack-sample-network:
+        ipv4_address: 172.31.0.3
+
+  mirth-cli-2:
+    image: healthkeri/mirth-with-cli:1.0.0
+    volumes:
+      - ./channels/mirth2:/opt/connect/channels
+    depends_on:
+      - mirth-connect-2
+    environment:
+      MIRTH_HOST: 172.31.0.3
+      MIRTH_PORT: 8443
+    networks: # Connect to the same network
+      rack-sample-network:
 
   rack-1:
     image: healthkeri/rack:1.0.0
@@ -35,7 +63,8 @@ services:
       SALT: DYA2LrpDmnk1xgI4ADxbc  # For testing purposes, never put a salt in a file like this
       PASS_ID: /opt/rack/passid.cesr
     networks: # Connect to the same network
-      - rack-sample-network
+      rack-sample-network:
+        ipv4_address: 172.31.0.4
 
   rack-2:
     image: healthkeri/rack:1.0.0
@@ -47,11 +76,11 @@ services:
       SALT: Bd8VBggWxGP-OjI7R4vxM  # For testing purposes, never put a salt in a file like this
       PASS_ID: /opt/rack/passid.cesr
     networks: # Connect to the same network
-      - rack-sample-network
-
-volumes:
-  mirth-connect-data1: # Named volume for Mirth Connect 1
-  mirth-connect-data2: # Named volume for Mirth Connect 2
+      rack-sample-network:
+        ipv4_address: 172.31.0.5
 
 networks:
   rack-sample-network: # Custom network for communication
+    ipam:
+      config:
+        - subnet: 172.31.0.0/16

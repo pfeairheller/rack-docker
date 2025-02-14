@@ -12,11 +12,11 @@ Mirth Connect Client
 - Create new python venv with Python 3.12.8 `python -m venv ./rack`
 - Install RACK Python library with `pip install rack-1.0.0-py3-none-any.whl`
 - Install 2 instances of RACK:
-    - `rack install --name Outbound --salt DYA2LrpDmnk1xgI4ADxbc --passid-file ./passid.cesr`
-    - `rack install --name Inbound --salt Bd8VBggWxGP-OjI7R4vxM --passid-file ./passid.cesr --admin-port 17632`
+    - `rack install --name Mirth1 --salt Bd8VBggWxGP-OjI7R4vxM --passid-file ./passid.cesr --admin-port 17632`
+    - `rack install --name Mirth2 --salt DYA2LrpDmnk1xgI4ADxbc --passid-file ./passid.cesr`
 - In two seperate windows launch an instance of RACK with the names used above
-    - `rack start --name Outbound`
-    - `rack start --name Inbound --metrics-port 9002`
+    - `rack start --name Mirth1`
+    - `rack start --name Mirth2 --metrics-port 9002`
 - Launch Locksmith
 - Create a new vault called "Locksmith"
 - Open the "Locksmith" vault

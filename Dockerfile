@@ -2,10 +2,10 @@
 FROM python:3.12.8-bookworm
 
 # Set environment variables
-ENV MIRTH_CONNECT_VERSION="4.5.2.b363"
 ENV DEBIAN_FRONTEND=noninteractive
 ENV VIRTUAL_ENV=/opt/venv
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+ENV RACK_VERSION=1.0.0
 
 # Install required dependencies
 RUN apt-get update && apt-get install -y \
@@ -19,12 +19,12 @@ RUN apt-get update && apt-get install -y \
 RUN python -m venv $VIRTUAL_ENV
 
 # Copy wheel file into container
-COPY ./dist/rack-1.0.0-py3-none-any.whl /tmp/
+COPY rack/rack-$RACK_VERSION-py3-none-any.whl /tmp/
 
 # Install wheel in virtual environment
 RUN . $VIRTUAL_ENV/bin/activate && \
-    pip install /tmp/rack-0.0.9-py3-none-any.whl && \
-    rm /tmp/rack-0.0.9-py3-none-any.whl
+    pip install /tmp/rack-$RACK_VERSION-py3-none-any.whl && \
+    rm /tmp/rack-$RACK_VERSION-py3-none-any.whl
 
 # Create Mirth user and set ownership
 RUN useradd -u 1001 -r -s /bin/false rack
@@ -52,17 +52,14 @@ fi
 rack start --name \"\$\{RACK_NAME\}\" \$\{ARGS\}
 EOF
 
-COPY ./images/passid.cesr /opt/rack
+COPY ./passid.cesr /opt/rack
 
 RUN chown -R rack:rack /opt/rack && \
     chown -R rack:rack /usr/local/var/keri && \
     chmod +x /opt/rack/rack.sh
 
-# Expose Mirth Connect ports
-EXPOSE 8632 8080
-
 WORKDIR /opt/rack/data
-COPY ./images/entrypoint.sh /
+COPY ./entrypoint.sh /
 RUN chmod 755 /entrypoint.sh
 
 USER rack

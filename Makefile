@@ -12,11 +12,11 @@ To enable the feature for Docker Desktop:
 	Select Apply and Restart."
 endef
 
-build-rack-mirth-sample: .warn
-	@docker build --platform=linux/amd64,linux/arm64 -f images/rack-mirth-sample.dockerfile -t healthkeri/rack-mirth-sample:$(VERSION) .
+build-mirth-cli: .warn
+	@docker build --platform=linux/amd64,linux/arm64 -f Dockerfile-mirth-cli -t healthkeri/mirth-with-cli:$(VERSION) .
 
 build-rack: .warn
-	@docker build --platform=linux/amd64,linux/arm64 -f images/rack.dockerfile -t healthkeri/rack:$(VERSION) .
+	@docker build --platform=linux/amd64,linux/arm64 -f Dockerfile -t healthkeri/rack:$(VERSION) .
 
 publish-rack-mirth-sample:
 	@docker push healthkeri/rack-mirth-sample:$(VERSION)

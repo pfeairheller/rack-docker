@@ -284,4 +284,4 @@ services:
 
 The Dockerfiles, entrypoint script, and any other files used to build these Docker images are Copyright © healthKERI and licensed under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt).
 
-You can find a copy of the RACK license in [LICENSE.txt](https://github.com/healthkeri/rack/blob/development/LICENSE).
+healthKERI is committed to Open Source Software and will be releasing our products as open source in the near future.  At that time you will be able to find a copy of the RACK license in [LICENSE.txt](https://github.com/healthkeri/rack/blob/development/LICENSE).

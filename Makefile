@@ -21,6 +21,9 @@ build-rack: .warn
 publish-rack-mirth-sample:
 	@docker push healthkeri/rack-mirth-sample:$(VERSION)
 
+publish-mirth-cli:
+	@docker push healthkeri/mirth-with-cli:$(VERSION)
+
 publish-rack:
 	@docker push healthkeri/rack:$(VERSION)
 
